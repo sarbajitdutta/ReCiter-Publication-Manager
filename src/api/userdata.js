@@ -15,7 +15,8 @@ const getIdentity = (uid, cb) => {
     }
     return request({
         headers: {
-            'api-key': adminApiKey
+            'api-key': adminApiKey,
+            'User-Agent': 'reciter-pub-manager-server'
         },
         uri: `${identityEndpoint}?uid=${uid}`,
         method: 'GET'
@@ -36,7 +37,8 @@ const getIdentity = (uid, cb) => {
 const getAllIdentity = (cb) => {
     return request({
         headers: {
-            'api-key': adminApiKey
+            'api-key': adminApiKey,
+            'User-Agent': 'reciter-pub-manager-server'
         },
         uri: `${identityAllEndpoint}`,
         method: 'GET'
@@ -44,6 +46,9 @@ const getAllIdentity = (cb) => {
         if (error) {
             return cb(error, null)
         }
+        console.log(body)
+        console.log('api-key' + adminApiKey)
+        console.log(identityAllEndpoint)
         if(response.statusCode != 200) {
             console.log('ReCiter IdentityAll api is not reachable')
             const apiError = 'ReCiter IdentityAll api is not reachable'
