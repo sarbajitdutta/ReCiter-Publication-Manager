@@ -36,7 +36,7 @@ export const identityFetchData = uid => dispatch => {
                     type: response.type,
                     title: response.statusText,
                     status: response.status,
-                    detail: "En error occurred. Please, try again later."
+                    detail: "Error occurred with api " + response.url + ". Please, try again later "
                 }
             }
         })
@@ -83,7 +83,7 @@ export const identityFetchAllData = () => dispatch => {
                     type: response.type,
                     title: response.statusText,
                     status: response.status,
-                    detail: "En error occurred. Please, try again later."
+                    detail: "Error occurred with api " + response.url + ". Please, try again later "
                 }
             }
         })
@@ -99,7 +99,6 @@ export const identityFetchAllData = () => dispatch => {
         })
         .catch(error => {
             console.log(error)
-
             dispatch(
                 addError(error)
             )
@@ -136,7 +135,7 @@ export const reciterFetchData = (uid, refresh) => dispatch => {
                     type: response.type,
                     title: response.statusText,
                     status: response.status,
-                    detail: "En error occurred. Please, try again later."
+                    detail: "Error occurred with api " + response.url + ". Please, try again later "
                 }
             }
         })
@@ -178,15 +177,20 @@ export const pubmedFetchData = query => dispatch => {
         body: JSON.stringify(query)
     }, 300000)
         .then(response => {
+            var errorMessage = ''
             if(response.status === 200) {
                 return response.json()
             }else {
+                response.json().then(parsedResponse => {
+                    errorMessage = parsedResponse.error.message
+                    console.log(errorMessage)
+                })
                 throw {
                     type: response.type,
-                    title: response.statusText,
+                    title: errorMessage,
                     status: response.status,
-                    detail: "En error occurred. Please, try again later."
-                }
+                    detail: "Error occurred with api " + response.url + ". Please, try again later "
+                } 
             }
         })
         .then(data => {
@@ -353,7 +357,7 @@ export const reciterUpdatePublication = (uid, request) => dispatch => {
                 type: response.type,
                 title: response.statusText,
                 status: response.status,
-                detail: "En error occurred. Please, try again later."
+                detail: "Error occurred with api " + response.url + ". Please, try again later "
             }
         }
     })

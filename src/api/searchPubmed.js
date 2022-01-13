@@ -18,7 +18,15 @@ const searchPubmed = (req, cb) => {
             const apiError = 'Pubmed search api is unreachable at the moment'
             return cb(apiError, null)
         }
-        if(body !== undefined) {
+        if(res.statusCode != 200) {
+            console.log('Pubmed search api is not reachable: ' + body)
+            const apiError = {
+                status: res.statusCode,
+                error: body
+            }
+            return cb(apiError, null)
+        }
+        if(res.statusCode == 200 && body !== undefined) {
             if(parseInt(body, 10) <= 200) {
                 request({
                     uri: `${searchPubmedEndpoint}`,
@@ -33,15 +41,14 @@ const searchPubmed = (req, cb) => {
                         return cb(error, null)
                     }
                     let data = JSON.parse(body)
-                    //const knownRelationships = data.knownRelationships.filter(relationship => relationship.type === 'CO_INVESTIGATOR')
                     return cb(null, formatPubmedSearch(data))
-                    
-            
                 });
             } else {
+                message = "Your search exceeded 200 results: " + parseInt(body, 10) + ". Please narrow down search."
                 const limitExceededError = {
                     limit: parseInt(body, 10),
-                    message: 'Your search exceeded 200 results. Please narrow down search'
+                    message: message,
+                    status: 500
                 }
                 return cb(limitExceededError, null)
             }

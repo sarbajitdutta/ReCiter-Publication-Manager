@@ -99,7 +99,7 @@ export const reciterData = (state=[], action) => {
             }
         case methods.REJECT_PUBLICATION :
             var publications = []
-            var pendingPublications = state.reciterPending
+            pendingPublications = state.reciterPending
             state.reciter.forEach(function(publication){
                 if(publication.pmid === action.payload) {
                     publication.userAssertion = 'REJECTED'
@@ -120,7 +120,7 @@ export const reciterData = (state=[], action) => {
             }
         case methods.UNDO_PUBLICATION :
             var publications = []
-            var pendingPublications = state.reciterPending
+            pendingPublications = state.reciterPending
             state.reciter.forEach(function(publication){
                 if(publication.pmid === action.payload) {
                     publication.userAssertion = 'NULL'
